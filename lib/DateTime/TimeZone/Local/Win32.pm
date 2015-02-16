@@ -6,7 +6,7 @@ use strict;
 use warnings;
 
 use Try::Tiny;
-use Win32::TieRegistry ( 'KEY_READ', Delimiter => q{/} );
+use Win32::TieRegistry 0.27 ( 'KEY_READ', Delimiter => q{/} );
 
 use parent 'DateTime::TimeZone::Local';
 
