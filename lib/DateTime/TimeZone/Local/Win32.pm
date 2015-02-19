@@ -6,7 +6,7 @@ use strict;
 use warnings;
 
 use Try::Tiny;
-use Win32::TieRegistry ( 'KEY_READ', Delimiter => q{/} );
+use Win32::TieRegistry 0.27 ( 'KEY_READ', Delimiter => q{/} );
 
 use parent 'DateTime::TimeZone::Local';
 
@@ -211,7 +211,7 @@ sub EnvVars { return 'TZ' }
 
         # On Windows 2008 Server, there is additional junk after a
         # null character.
-        $win_name =~ s/\0.*$//
+        $win_name =~ s/\0.*$//s
             if defined $win_name;
 
         return unless defined $win_name;

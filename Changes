@@ -1,5 +1,18 @@
 {{$NEXT}}
 
+    - Required Win32-TieRegistry v0.27 to fix failures on Perl 5.20.1.  
+      RT #100334 & 102178.
+    
+    - Fix failures on Windows 2008 when newlines appear following null
+      character in time zone name.  Patch in main code by Stuart Watt and for
+      test by Tom Koelman.  RT #68607 & 70989.
+      
+    - Fix maintainer test to appropriate test time zones in current time, not
+      historical time.
+
+
+1.80    2014-11-16
+
     - This is the initial release creating a separate distribution for
       DateTime::TimeZone::Local::Win32. As a result, additional changes specific
       to the Windows platform should be made more often.

@@ -15,7 +15,7 @@ plan skip_all => 'These tests only run on Windows'
 
 my $Registry;
 use DateTime::TimeZone::Local::Win32;
-use Win32::TieRegistry ( TiedRef => \$Registry, Delimiter => q{/} );
+use Win32::TieRegistry 0.27 ( TiedRef => \$Registry, Delimiter => q{/} );
 
 my $tzi_key = $Registry->Open(
     'LMachine/SYSTEM/CurrentControlSet/Control/TimeZoneInformation/', {
@@ -35,6 +35,12 @@ my $WindowsTZKey;
         set_and_test_windows_tz( $win_tz_name, undef, $tzi_key );
     }
 
+    my $denver_time_zone_with_newlines = join( '', "Mountain Standard Time", map { chr } qw(  0 10 0 0 0 0 0 0
+        82 0 0 0 63 32 0 0 63 120 0 0 32 0 0 0 72 0 0 0 64 116 122 114 101 115
+        46 100 108 108 44 45 49 57 50 0 0 0 0 0 1 0 0 0 63 13 0 0 63 63 63 0 63
+        13 0 0 1 0 0 0 64 116 122 114 101 115 46 100 108 108 44 45 49 57 49 0 72
+        0 0 0 0 0 0 0 63 120 0 0 213 63 63 0 0 0 0 0 0 ) );
+
     # We test these explicitly because we want to make sure that at
     # least a few known names do work, rather than just relying on
     # looping through a list.
@@ -42,6 +48,7 @@ my $WindowsTZKey;
         [ 'Eastern Standard Time',  'America/New_York' ],
         [ 'Dateline Standard Time', '-1200' ],
         [ 'Israel Standard Time',   'Asia/Jerusalem' ],
+        [ $denver_time_zone_with_newlines,   'America/Denver' ],
         ) {
         set_and_test_windows_tz( @{$pair}, $tzi_key );
     }
@@ -118,11 +125,7 @@ sub test_windows_zone {
                     1
                 );
             }
-            my $dt = DateTime->new(
-                year      => 2010,
-                month     => 7,
-                day       => 1,
-                hour      => 12,
+            my $dt = DateTime->now(
                 time_zone => $tz->name(),
             );
 
@@ -147,7 +150,7 @@ sub test_windows_zone {
                 }
             }
 
-            unless ( -d '.hg' ) {
+            unless ( $ENV{'MAINTAINER'} ) {
                 skip(
                     "$windows_tz_name - Windows offset matches Olson offset (Maintainer only)",
                     1
