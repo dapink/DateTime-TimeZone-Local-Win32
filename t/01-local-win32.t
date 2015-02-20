@@ -2,7 +2,7 @@ use strict;
 use warnings;
 
 use DateTime;
-use DateTime::TimeZone::Local;
+use DateTime::TimeZone::Local 1.85;
 use File::Basename qw( basename );
 use File::Spec;
 use Sys::Hostname qw( hostname );

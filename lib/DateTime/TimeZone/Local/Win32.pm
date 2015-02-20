@@ -78,6 +78,7 @@ sub EnvVars { return 'TZ' }
         'E. South America Standard Time'  => 'America/Sao_Paulo',
         'Eastern'                         => 'America/New_York',
         'Eastern Standard Time'           => 'America/New_York',
+        'Eastern Standard Time (Mexico)'  => 'America/Cancun',
         'Egypt'                           => 'Africa/Cairo',
         'Egypt Standard Time'             => 'Africa/Cairo',
         'Ekaterinburg'                    => 'Asia/Yekaterinburg',
