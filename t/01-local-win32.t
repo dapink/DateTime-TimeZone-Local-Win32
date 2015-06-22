@@ -1,6 +1,11 @@
 use strict;
 use warnings;
 
+use constant {
+    MAINTAINER_DT_TZ_MIN => 1.91,
+    TESTER_DT_TZ_MIN => 1.73,
+};
+
 use Test::More 0.88;
 my $recent_DT_TZ = 0;
 eval {
@@ -9,9 +14,16 @@ eval {
     require DateTime::TimeZone::Local::Win32;
 };
 if ($@) {
-    plan skip_all => 'These tests run only when DateTime and DateTime::TimeZone are present.';
+    plan skip_all => 
+        'These tests run only when DateTime and DateTime::TimeZone are present.';
 } else {
-    $recent_DT_TZ = 1 if $DateTime::TimeZone::Local::VERSION >= 1.91;
+    if ($DateTime::TimeZone::Local::VERSION < TESTER_DT_TZ_MIN)
+    {
+        plan skip_all => 
+            'These tests require DateTime::TimeZone to be version ' .
+            TESTER_DT_TZ_MIN . ' or greater.';
+    }
+    $recent_DT_TZ = 1 if $DateTime::TimeZone::Local::VERSION >= MAINTAINER_DT_TZ_MIN;
 }
 use File::Basename qw( basename );
 use File::Spec;

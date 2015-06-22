@@ -1,5 +1,10 @@
 {{$NEXT}}
 
+1.84    2015-06-22
+
+    - Require testers to have minimum version of DateTime::TimeZone::Local
+      before any tests are run.
+
 1.83    2015-06-22
 
     - Remove prerequisite to DateTime::TimeZone::Local and DateTime.
