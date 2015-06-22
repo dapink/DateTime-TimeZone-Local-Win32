@@ -1,5 +1,18 @@
 {{$NEXT}}
 
+1.83    2015-06-22
+
+    - Remove prerequisite to DateTime::TimeZone::Local and DateTime.
+    
+    - Update tests to run conditionally on presence of DateTime::TimeZone::Local
+      and DateTime.
+      
+    - Require maintainer tests to work only on a recent build of DateTime::TimeZone.
+    
+    - Rename references to Olson to IANA as the current maintainer of the tz database.
+    
+    - Modify prerequisite versions for some modules.
+
 1.82    2015-02-19
 
     - Add support for upcoming Windows time zone update for March 2015, which

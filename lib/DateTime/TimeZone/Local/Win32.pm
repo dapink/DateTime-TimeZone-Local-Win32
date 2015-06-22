@@ -17,7 +17,7 @@ sub EnvVars { return 'TZ' }
 {
     # This list comes (mostly) in the zipball for the Chronos project
     # - a Smalltalk datetime library. Thanks, Chronos!
-    my %WinToOlson = (
+    my %WinToIANA = (
         'Afghanistan'                     => 'Asia/Kabul',
         'Afghanistan Standard Time'       => 'Asia/Kabul',
         'Alaskan'                         => 'America/Anchorage',
@@ -217,15 +217,15 @@ sub EnvVars { return 'TZ' }
 
         return unless defined $win_name;
 
-        my $olson = $WinToOlson{$win_name};
+        my $iana = $WinToIANA{$win_name};
 
-        return unless $olson;
+        return unless $iana;
 
-        return unless $class->_IsValidName($olson);
+        return unless $class->_IsValidName($iana);
 
         return try {
             local $SIG{__DIE__};
-            DateTime::TimeZone->new( name => $olson );
+            DateTime::TimeZone->new( name => $iana );
         };
     }
 }
@@ -303,7 +303,7 @@ It checks C<< $ENV{TZ} >> for a valid time zone name.
 =item * Windows Registry
 
 When using the registry, we look for the Windows time zone and use a
-mapping to translate this to an Olson time zone name.
+mapping to translate this to an IANA time zone name.
 
 =over 8
 
@@ -311,7 +311,7 @@ mapping to translate this to an Olson time zone name.
 
 We look in "SYSTEM/CurrentControlSet/Control/TimeZoneInformation/" for
 a node named "/TimeZoneKeyName". If this exists, we use this key to
-look up the Olson time zone name in our mapping.
+look up the IANA time zone name in our mapping.
 
 =item * Windows NT, Windows 2000, Windows XP, Windows 2003 Server
 
@@ -322,7 +322,7 @@ For each sub key, we compare the value of the key with "/Std" appended
 to the end to the value of
 "SYSTEM/CurrentControlSet/Control/TimeZoneInformation/StandardName". This
 gives us the I<English> name of the Windows time zone, which we use to
-look up the Olson time zone name.
+look up the IANA time zone name.
 
 =item * Windows 95, Windows 98, Windows Millenium Edition
 

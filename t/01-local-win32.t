@@ -1,20 +1,26 @@
 use strict;
 use warnings;
 
-use DateTime;
-use DateTime::TimeZone::Local 1.85;
+use Test::More 0.88;
+my $recent_DT_TZ = 0;
+eval {
+    require DateTime;
+    require DateTime::TimeZone::Local;
+    require DateTime::TimeZone::Local::Win32;
+};
+if ($@) {
+    plan skip_all => 'These tests run only when DateTime and DateTime::TimeZone are present.';
+} else {
+    $recent_DT_TZ = 1 if $DateTime::TimeZone::Local::VERSION >= 1.91;
+}
 use File::Basename qw( basename );
 use File::Spec;
 use Sys::Hostname qw( hostname );
-use Test::More;
 
 use lib File::Spec->catdir( File::Spec->curdir, 't' );
 
-plan skip_all => 'These tests only run on Windows'
-    unless $^O =~ /win32/i;
-
 my $Registry;
-use DateTime::TimeZone::Local::Win32;
+
 use Win32::TieRegistry 0.27 ( TiedRef => \$Registry, Delimiter => q{/} );
 
 my $tzi_key = $Registry->Open(
@@ -74,7 +80,7 @@ sub windows_tz_names {
 
 sub set_and_test_windows_tz {
     my $windows_tz_name = shift;
-    my $olson_name      = shift;
+    my $iana_name      = shift;
     my $tzi_key         = shift;
 
     if (   defined $tzi_key
@@ -82,7 +88,7 @@ sub set_and_test_windows_tz {
         && $tzi_key->{'/TimeZoneKeyName'} ne '' ) {
         local $tzi_key->{'/TimeZoneKeyName'} = $windows_tz_name;
 
-        test_windows_zone( $windows_tz_name, $olson_name );
+        test_windows_zone( $windows_tz_name, $iana_name );
     }
     else {
         local $tzi_key->{'/StandardName'} = (
@@ -91,13 +97,13 @@ sub set_and_test_windows_tz {
             : 'MAKE BELIEVE VALUE'
         );
 
-        test_windows_zone( $windows_tz_name, $olson_name );
+        test_windows_zone( $windows_tz_name, $iana_name );
     }
 }
 
 sub test_windows_zone {
     my $windows_tz_name = shift;
-    my $olson_name      = shift;
+    my $iana_name      = shift;
 
     my %KnownBad = map { $_ => 1 } ();
 
@@ -105,13 +111,13 @@ sub test_windows_zone {
 
     ok(
         $tz && DateTime::TimeZone->is_valid_name( $tz->name() ),
-        "$windows_tz_name - found valid Olson time zone from Windows"
+        "$windows_tz_name - found valid IANA time zone from Windows"
     );
 
-    if ( defined $olson_name ) {
-        my $desc = "$windows_tz_name was mapped to $olson_name";
+    if ( defined $iana_name ) {
+        my $desc = "$windows_tz_name was mapped to $iana_name";
         if ($tz) {
-            is( $tz->name(), $olson_name, $desc );
+            is( $tz->name(), $iana_name, $desc );
         }
         else {
             fail($desc);
@@ -129,8 +135,8 @@ sub test_windows_zone {
                 time_zone => $tz->name(),
             );
 
-            my $olson_offset = int( $dt->strftime("%z") );
-            $olson_offset -= 100 if $dt->is_dst();
+            my $iana_offset = int( $dt->strftime("%z") );
+            $iana_offset -= 100 if $dt->is_dst();
             my $windows_offset
                 = $WindowsTZKey->{"${windows_tz_name}/Display"};
 
@@ -150,9 +156,9 @@ sub test_windows_zone {
                 }
             }
 
-            unless ( $ENV{'MAINTAINER'} ) {
+            unless ( $ENV{'MAINTAINER'} && $recent_DT_TZ ) {
                 skip(
-                    "$windows_tz_name - Windows offset matches Olson offset (Maintainer only)",
+                    "$windows_tz_name - Windows offset matches IANA offset (Maintainer only on recent versions of DateTime::TimeZone)",
                     1
                 );
             }
@@ -160,10 +166,10 @@ sub test_windows_zone {
             if ( $KnownBad{$windows_tz_name} ) {
             TODO: {
                     local $TODO
-                        = "Microsoft has some out-of-date time zones relative to Olson";
+                        = "Microsoft has some out-of-date time zones relative to IANA";
                     is(
-                        $olson_offset, $windows_offset,
-                        "$windows_tz_name - Windows offset matches Olson offset"
+                        $iana_offset, $windows_offset,
+                        "$windows_tz_name - Windows offset matches IANA offset"
                     );
                     return;
                 }
@@ -178,8 +184,8 @@ sub test_windows_zone {
             }
             else {
                 is(
-                    $olson_offset, $windows_offset,
-                    "$windows_tz_name - Windows offset matches Olson offset"
+                    $iana_offset, $windows_offset,
+                    "$windows_tz_name - Windows offset matches IANA offset"
                 );
             }
         }
