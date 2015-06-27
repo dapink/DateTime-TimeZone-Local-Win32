@@ -1,5 +1,15 @@
 {{$NEXT}}
 
+1.85    2015-06-27
+
+    - Change compile test to an author test due to possibility of
+      DateTime::TimeZone::Local not being present. Patch by Dave Rolsky.
+      
+    - Change environment variable for author testing in main test script to
+      be consistent with conventions.
+      
+    - Include extra modules when reporting prerequisites from testing.
+
 1.84    2015-06-22
 
     - Require testers to have minimum version of DateTime::TimeZone::Local

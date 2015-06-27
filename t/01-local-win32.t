@@ -168,7 +168,7 @@ sub test_windows_zone {
                 }
             }
 
-            unless ( $ENV{'MAINTAINER'} && $recent_DT_TZ ) {
+            unless ( $ENV{'AUTHOR_TESTING'} && $recent_DT_TZ ) {
                 skip(
                     "$windows_tz_name - Windows offset matches IANA offset (Maintainer only on recent versions of DateTime::TimeZone)",
                     1
