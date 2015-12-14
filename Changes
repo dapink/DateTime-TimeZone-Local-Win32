@@ -1,5 +1,16 @@
 {{$NEXT}}
 
+1.86    2015-12-13
+
+    - Add support for new time zone in North Korea.
+    
+    - Reorganize tests so that many tests can run with only read access to the
+      registry. Currently, most testers have all tests skipped because they are
+      not running as an Administrator during testing.
+      
+    - Add internal method to read Windows to IANA hash so as to enable testing for
+      those with only read access to the registry.
+
 1.85    2015-06-27
 
     - Change compile test to an author test due to possibility of

@@ -135,6 +135,7 @@ sub EnvVars { return 'TZ' }
         'Newfoundland Standard Time'      => 'America/St_Johns',
         'North Asia East Standard Time'   => 'Asia/Irkutsk',
         'North Asia Standard Time'        => 'Asia/Krasnoyarsk',
+        'North Korea Standard Time'       => 'Asia/Pyongyang',
         'Pacific'                         => 'America/Los_Angeles',
         'Pacific SA'                      => 'America/Santiago',
         'Pacific SA Standard Time'        => 'America/Santiago',
@@ -204,6 +205,14 @@ sub EnvVars { return 'TZ' }
         'Yakutsk'                         => 'Asia/Yakutsk',
         'Yakutsk Standard Time'           => 'Asia/Yakutsk',
     );
+    
+    sub _WindowsToIANA {
+        my $class = shift;
+        
+        my $win_name = shift;
+
+        return $WinToIANA{$win_name};
+    }
 
     sub FromRegistry {
         my $class = shift;
@@ -217,7 +226,7 @@ sub EnvVars { return 'TZ' }
 
         return unless defined $win_name;
 
-        my $iana = $WinToIANA{$win_name};
+        my $iana = $class->_WindowsToIANA($win_name);
 
         return unless $iana;
 

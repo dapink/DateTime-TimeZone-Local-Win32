@@ -2,12 +2,11 @@ use strict;
 use warnings;
 
 use constant {
-    MAINTAINER_DT_TZ_MIN => 1.91,
-    TESTER_DT_TZ_MIN => 1.73,
+    DT_TZ_MIN => 1.94,
 };
 
 use Test::More 0.88;
-my $recent_DT_TZ = 0;
+
 eval {
     require DateTime;
     require DateTime::TimeZone::Local;
@@ -17,13 +16,12 @@ if ($@) {
     plan skip_all => 
         'These tests run only when DateTime and DateTime::TimeZone are present.';
 } else {
-    if ($DateTime::TimeZone::Local::VERSION < TESTER_DT_TZ_MIN)
+    if ($DateTime::TimeZone::Local::VERSION < DT_TZ_MIN)
     {
         plan skip_all => 
             'These tests require DateTime::TimeZone to be version ' .
-            TESTER_DT_TZ_MIN . ' or greater.';
+            DT_TZ_MIN . ' or greater.';
     }
-    $recent_DT_TZ = 1 if $DateTime::TimeZone::Local::VERSION >= MAINTAINER_DT_TZ_MIN;
 }
 use File::Basename qw( basename );
 use File::Spec;
@@ -42,15 +40,21 @@ my $tzi_key = $Registry->Open(
     }
 );
 
-plan skip_all =>
-    'These tests require write access to TimeZoneInformation registry key'
-    unless $tzi_key;
+my $registry_writable;
+if ($tzi_key)
+{
+    $registry_writable = 1;
+}
+else
+{
+    $registry_writable = 0;
+}
 
 my $WindowsTZKey;
 
 {
     foreach my $win_tz_name ( windows_tz_names() ) {
-        set_and_test_windows_tz( $win_tz_name, undef, $tzi_key );
+        set_and_test_windows_tz( $win_tz_name, undef, $tzi_key, $registry_writable );
     }
 
     my $denver_time_zone_with_newlines = join( '', "Mountain Standard Time", map { chr } qw(  0 10 0 0 0 0 0 0
@@ -62,13 +66,20 @@ my $WindowsTZKey;
     # We test these explicitly because we want to make sure that at
     # least a few known names do work, rather than just relying on
     # looping through a list.
-    for my $pair (
+    foreach my $pair (
         [ 'Eastern Standard Time',  'America/New_York' ],
-        [ 'Dateline Standard Time', '-1200' ],
+        [ 'Dateline Standard Time', '-1200' ],, 
         [ 'Israel Standard Time',   'Asia/Jerusalem' ],
-        [ $denver_time_zone_with_newlines,   'America/Denver' ],
         ) {
-        set_and_test_windows_tz( @{$pair}, $tzi_key );
+        set_and_test_windows_tz( @{$pair}, $tzi_key, $registry_writable );
+    }
+    SKIP: {
+        skip (
+            "Explicit time zone test with unexpected data (Registry not writable)",
+            2
+        ) unless $registry_writable;
+        
+        set_and_test_windows_tz( $denver_time_zone_with_newlines, 'America/Denver', $tzi_key, $registry_writable );
     }
 }
 
@@ -94,51 +105,80 @@ sub set_and_test_windows_tz {
     my $windows_tz_name = shift;
     my $iana_name      = shift;
     my $tzi_key         = shift;
+    my $registry_writable = shift;
 
-    if (   defined $tzi_key
-        && defined $tzi_key->{'/TimeZoneKeyName'}
-        && $tzi_key->{'/TimeZoneKeyName'} ne '' ) {
-        local $tzi_key->{'/TimeZoneKeyName'} = $windows_tz_name;
+    if ($registry_writable)
+    {
+        if (   defined $tzi_key
+            && defined $tzi_key->{'/TimeZoneKeyName'}
+            && $tzi_key->{'/TimeZoneKeyName'} ne '' ) {
+            local $tzi_key->{'/TimeZoneKeyName'} = $windows_tz_name;
 
-        test_windows_zone( $windows_tz_name, $iana_name );
+            test_windows_zone( $windows_tz_name, $iana_name, $registry_writable );
+        }
+        else {
+            local $tzi_key->{'/StandardName'} = (
+                  $WindowsTZKey->{ $windows_tz_name . q{/} }
+                ? $WindowsTZKey->{ $windows_tz_name . '/Std' }
+                : 'MAKE BELIEVE VALUE'
+            );
+
+            test_windows_zone( $windows_tz_name, $iana_name, $registry_writable );
+        }
     }
-    else {
-        local $tzi_key->{'/StandardName'} = (
-              $WindowsTZKey->{ $windows_tz_name . q{/} }
-            ? $WindowsTZKey->{ $windows_tz_name . '/Std' }
-            : 'MAKE BELIEVE VALUE'
-        );
-
-        test_windows_zone( $windows_tz_name, $iana_name );
+    else
+    {
+        test_windows_zone( $windows_tz_name, $iana_name, $registry_writable );
     }
 }
 
 sub test_windows_zone {
     my $windows_tz_name = shift;
     my $iana_name      = shift;
+    my $registry_writable = shift;
 
     my %KnownBad = map { $_ => 1 } ();
 
-    my $tz = DateTime::TimeZone::Local::Win32->FromRegistry();
+    my $tz;
+    if ($registry_writable) {
+        $tz = DateTime::TimeZone::Local::Win32->FromRegistry();
 
-    ok(
-        $tz && DateTime::TimeZone->is_valid_name( $tz->name() ),
-        "$windows_tz_name - found valid IANA time zone from Windows"
-    );
+        ok(
+            $tz && DateTime::TimeZone->is_valid_name( $tz->name() ),
+            "$windows_tz_name - found valid IANA time zone '" . $tz->name() . "' from Windows"
+        );
+    }
+    else {
+        my $tz_name = DateTime::TimeZone::Local::Win32->_WindowsToIANA( $windows_tz_name );
+        ok (
+            defined $tz_name && DateTime::TimeZone->is_valid_name( $tz_name ),
+            "$windows_tz_name - found valid IANA time zone '" . $tz_name . "' from Hash"
+        );
+    }
 
     if ( defined $iana_name ) {
         my $desc = "$windows_tz_name was mapped to $iana_name";
-        if ($tz) {
-            is( $tz->name(), $iana_name, $desc );
+        if ( $registry_writable && $tz ) {
+            is( $tz->name(), $iana_name, "$desc (Registry)" );
+        }
+        elsif ( $registry_writable ) {
+            fail("$desc (Registry)");
         }
         else {
-            fail($desc);
+            my $tz_name = DateTime::TimeZone::Local::Win32->_WindowsToIANA( $windows_tz_name );
+            is ( $tz_name, $iana_name, "$desc (Hash)" );
         }
     }
     else {
-    SKIP: {
+        SKIP: {
+            unless ( $ENV{'AUTHOR_TESTING'} && $registry_writable ) {
+                skip (
+                    "$windows_tz_name - Windows offset matches IANA offset (Maintainer only)",
+                    1
+                );
+            }
             if ( !$tz || !DateTime::TimeZone->is_valid_name( $tz->name() ) ) {
-                skip(
+                skip (
                     "Time Zone display for $windows_tz_name not testable",
                     1
                 );
@@ -161,18 +201,11 @@ sub test_windows_zone {
                     $windows_offset = int($windows_offset);
                 }
                 else {
-                    skip(
+                    skip (
                         "Time Zone display for $windows_tz_name not testable",
                         1
                     );
                 }
-            }
-
-            unless ( $ENV{'AUTHOR_TESTING'} && $recent_DT_TZ ) {
-                skip(
-                    "$windows_tz_name - Windows offset matches IANA offset (Maintainer only on recent versions of DateTime::TimeZone)",
-                    1
-                );
             }
 
             if ( $KnownBad{$windows_tz_name} ) {
@@ -189,7 +222,7 @@ sub test_windows_zone {
             elsif ( defined $WindowsTZKey->{"${windows_tz_name}/IsObsolete"}
                 && $WindowsTZKey->{"${windows_tz_name}/IsObsolete"} eq
                 "0x00000001" ) {
-                skip(
+                skip (
                     "$windows_tz_name - deprecated by Microsoft",
                     1
                 );
