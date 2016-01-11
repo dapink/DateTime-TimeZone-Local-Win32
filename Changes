@@ -1,5 +1,9 @@
 {{$NEXT}}
 
+1.87    2016-01-11
+
+    - Fix files missing warning on install.
+
 1.86    2015-12-13
 
     - Add support for new time zone in North Korea.
