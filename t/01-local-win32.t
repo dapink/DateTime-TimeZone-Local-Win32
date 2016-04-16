@@ -2,7 +2,7 @@ use strict;
 use warnings;
 
 use constant {
-    DT_TZ_MIN => 1.94,
+    DT_TZ_MIN => 1.96,
 };
 
 use Test::More 0.88;
@@ -137,7 +137,7 @@ sub test_windows_zone {
     my $iana_name      = shift;
     my $registry_writable = shift;
 
-    my %KnownBad = map { $_ => 1 } ();
+    my %KnownBad = map { $_ => 1 } ('Pacific SA Standard Time');
 
     my $tz;
     if ($registry_writable) {
@@ -145,7 +145,8 @@ sub test_windows_zone {
 
         ok(
             $tz && DateTime::TimeZone->is_valid_name( $tz->name() ),
-            "$windows_tz_name - found valid IANA time zone '" . $tz->name() . "' from Windows"
+            "$windows_tz_name - found valid IANA time zone '" .
+            DateTime::TimeZone::Local::Win32->_FindWindowsTZName() . "' from Windows"
         );
     }
     else {

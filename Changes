@@ -1,5 +1,14 @@
 {{$NEXT}}
 
+1.88    2016-04-16
+
+    - Add support for new time zones in Russia.
+    
+    - Fix test failure when new time zone exists but is not handled in library.
+    
+    - Mark Chile time zone as not being updated yet by Microsoft to prevent
+      author test from failing.
+
 1.87    2016-01-11
 
     - Fix files missing warning on install.
