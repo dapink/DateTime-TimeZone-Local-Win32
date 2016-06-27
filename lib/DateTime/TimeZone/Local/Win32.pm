@@ -233,6 +233,13 @@ sub EnvVars { return 'TZ' }
         
         my $win_name = shift;
 
+        # On Windows 2008 Server, there is additional junk after a
+        # null character.
+        $win_name =~ s/\0.*$//s
+            if defined $win_name;
+
+        return unless defined $win_name;
+
         return $WinToIANA{$win_name};
     }
 
@@ -240,13 +247,6 @@ sub EnvVars { return 'TZ' }
         my $class = shift;
 
         my $win_name = $class->_FindWindowsTZName();
-
-        # On Windows 2008 Server, there is additional junk after a
-        # null character.
-        $win_name =~ s/\0.*$//s
-            if defined $win_name;
-
-        return unless defined $win_name;
 
         my $iana = $class->_WindowsToIANA($win_name);
 

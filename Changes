@@ -1,5 +1,10 @@
 {{$NEXT}}
 
+1.90    2016-06-27
+
+    - Fix test failure when registry was writable, but extra data existed after the
+      time zone key.
+
 1.89    2016-06-27
 
     - Many new time zones and updates from May 2016 and June 2016 DST and time

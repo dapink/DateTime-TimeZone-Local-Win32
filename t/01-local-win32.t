@@ -65,19 +65,12 @@ my $WindowsTZKey;
     # looping through a list.
     foreach my $pair (
         [ 'Eastern Standard Time',  'America/New_York' ],
-        [ 'Dateline Standard Time', '-1200' ],, 
+        [ 'Dateline Standard Time', '-1200' ],
         [ 'Israel Standard Time',   'Asia/Jerusalem' ],
         ) {
         set_and_test_windows_tz( @{$pair}, $tzi_key, $registry_writable );
     }
-    SKIP: {
-        skip (
-            "Explicit time zone test with unexpected data (Registry not writable)",
-            2
-        ) unless $registry_writable;
-        
-        set_and_test_windows_tz( $denver_time_zone_with_newlines, 'America/Denver', $tzi_key, $registry_writable );
-    }
+    set_and_test_windows_tz( $denver_time_zone_with_newlines, 'America/Denver', $tzi_key, $registry_writable );
 }
 
 done_testing();
@@ -137,7 +130,7 @@ sub test_windows_zone {
 
 
     my $tz;
-    if ($registry_writable && $minimum_DT_TZ) {
+    if ( $registry_writable && $minimum_DT_TZ ) {
         $tz = DateTime::TimeZone::Local::Win32->FromRegistry();
 
         ok(
