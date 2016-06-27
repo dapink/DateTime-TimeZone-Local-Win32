@@ -2,7 +2,7 @@ use strict;
 use warnings;
 
 use constant {
-    DT_TZ_MIN => 1.96,
+    DT_TZ_MIN => 1.98,
 };
 
 use Test::More 0.88;
@@ -15,13 +15,6 @@ eval {
 if ($@) {
     plan skip_all => 
         'These tests run only when DateTime and DateTime::TimeZone are present.';
-} else {
-    if ($DateTime::TimeZone::Local::VERSION < DT_TZ_MIN)
-    {
-        plan skip_all => 
-            'These tests require DateTime::TimeZone to be version ' .
-            DT_TZ_MIN . ' or greater.';
-    }
 }
 use File::Basename qw( basename );
 use File::Spec;
@@ -40,7 +33,7 @@ my $tzi_key = $Registry->Open(
     }
 );
 
-my $registry_writable;
+my ($registry_writable, $minimum_DT_TZ);
 if ($tzi_key)
 {
     $registry_writable = 1;
@@ -48,6 +41,10 @@ if ($tzi_key)
 else
 {
     $registry_writable = 0;
+}
+if ( $DateTime::TimeZone::Local::VERSION >= DT_TZ_MIN )
+{
+    $minimum_DT_TZ = 1;
 }
 
 my $WindowsTZKey;
@@ -136,11 +133,11 @@ sub test_windows_zone {
     my $windows_tz_name = shift;
     my $iana_name      = shift;
     my $registry_writable = shift;
+    my %KnownBad = map { $_ => 1 } ();
 
-    my %KnownBad = map { $_ => 1 } ('Pacific SA Standard Time');
 
     my $tz;
-    if ($registry_writable) {
+    if ($registry_writable && $minimum_DT_TZ) {
         $tz = DateTime::TimeZone::Local::Win32->FromRegistry();
 
         ok(
@@ -153,16 +150,16 @@ sub test_windows_zone {
         my $tz_name = DateTime::TimeZone::Local::Win32->_WindowsToIANA( $windows_tz_name );
         ok (
             defined $tz_name && DateTime::TimeZone->is_valid_name( $tz_name ),
-            "$windows_tz_name - found valid IANA time zone '" . $tz_name . "' from Hash"
+            "$windows_tz_name - found valid IANA time zone '" . $windows_tz_name . "' from Hash"
         );
     }
 
     if ( defined $iana_name ) {
         my $desc = "$windows_tz_name was mapped to $iana_name";
-        if ( $registry_writable && $tz ) {
+        if ( $registry_writable && $tz && $minimum_DT_TZ ) {
             is( $tz->name(), $iana_name, "$desc (Registry)" );
         }
-        elsif ( $registry_writable ) {
+        elsif ( $registry_writable && $minimum_DT_TZ ) {
             fail("$desc (Registry)");
         }
         else {

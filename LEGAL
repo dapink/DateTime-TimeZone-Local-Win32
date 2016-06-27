@@ -8,7 +8,7 @@ __{ META2_NAME }__
 perl_5
 __[ NOTICE ]__
 Copyright (C) 2007-2014 Dave Rolsky <autarch@urth.org>
-Copyright (C) 2014-{{$self->year}} by David Pinkowitz <dapink@cpan.org>
+Copyright (C) 2014-{{$self->year}} by David Pinkowitz <david_pinkowitz@bmc.com>
 
 This is free software; you can redistribute it and/or modify it under
 {{$self->name}}.
@@ -26,7 +26,7 @@ my $license = Software::License::GPL_1->new({holder => $self->holder});
 $license->name }} ---
 
 Copyright (C) 2007-2014 Dave Rolsky <autarch@urth.org>
-Copyright (C) 2014-{{$self->year}} by David Pinkowitz <dapink@cpan.org>
+Copyright (C) 2014-{{$self->year}} by David Pinkowitz <david_pinkowitz@bmc.com>
 
 This is free software, licensed under:
 
@@ -43,7 +43,7 @@ my $license = Software::License::Artistic_1_0->new({holder => $self->holder});
 $license->name }} ---
 
 Copyright (C) 2007-2014 Dave Rolsky <autarch@urth.org>
-Copyright (C) 2014-{{$self->year}} by David Pinkowitz <dapink@cpan.org>
+Copyright (C) 2014-{{$self->year}} by David Pinkowitz <david_pinkowitz@bmc.com>
 
 This is free software, licensed under:
 

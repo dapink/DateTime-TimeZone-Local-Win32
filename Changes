@@ -1,5 +1,14 @@
 {{$NEXT}}
 
+1.89    2016-06-27
+
+    - Many new time zones and updates from May 2016 and June 2016 DST and time
+      zone updates for Windows.
+    
+    - Fix test warnings when testing from non-admin shell using readonly registry values.
+    
+    - Remove Chile time zone as exception to prevent author test from failing.
+
 1.88    2016-04-16
 
     - Add support for new time zones in Russia.
