@@ -1,5 +1,9 @@
 {{$NEXT}}
 
+1.91    2016-07-01
+
+    - Correct mappings of a few time zones.
+
 1.90    2016-06-27
 
     - Fix test failure when registry was writable, but extra data existed after the
