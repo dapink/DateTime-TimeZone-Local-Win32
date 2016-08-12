@@ -1,5 +1,13 @@
 {{$NEXT}}
 
+1.92    2016-08-12
+
+    - Correct test failure when running as Administrator on Windows when using older
+      versions of DateTime::TimeZone. RT 116909.
+      
+    - Added time zone as a known bad zone until Microsoft fixes updates. This affects
+      author testing only and not functionality.
+
 1.91    2016-07-01
 
     - Correct mappings of a few time zones.
