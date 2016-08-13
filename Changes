@@ -1,5 +1,12 @@
 {{$NEXT}}
 
+1.93    2016-08-13
+
+    - Run certain tests only during automated testing to avoid user test failures
+      should time zones change before the module is updated.
+      
+    - Build changes to improve CPANTS Kwalitee score.
+
 1.92    2016-08-12
 
     - Correct test failure when running as Administrator on Windows when using older

@@ -51,7 +51,15 @@ my $WindowsTZKey;
 
 {
     foreach my $win_tz_name ( windows_tz_names() ) {
-        set_and_test_windows_tz( $win_tz_name, undef, $tzi_key, $registry_writable );
+        SKIP: {
+            unless ( $ENV{'AUTOMATED_TESTING'} ) {
+                skip (
+                    "$win_tz_name - Set and test Windows time zone (Automated only)",
+                    2
+                );
+            }
+            set_and_test_windows_tz( $win_tz_name, undef, $tzi_key, $registry_writable );
+        }
     }
 
     my $denver_time_zone_with_newlines = join( '', "Mountain Standard Time", map { chr } qw(  0 10 0 0 0 0 0 0
