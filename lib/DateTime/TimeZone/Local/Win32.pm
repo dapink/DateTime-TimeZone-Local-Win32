@@ -148,6 +148,7 @@ sub EnvVars { return 'TZ' }
         'North Asia East Standard Time'   => 'Asia/Irkutsk',
         'North Asia Standard Time'        => 'Asia/Krasnoyarsk',
         'North Korea Standard Time'       => 'Asia/Pyongyang',
+        'Omsk Standard Time'              => 'Asia/Omsk',
         'Pacific'                         => 'America/Los_Angeles',
         'Pacific SA'                      => 'America/Santiago',
         'Pacific SA Standard Time'        => 'America/Santiago',
@@ -338,7 +339,7 @@ mapping to translate this to an IANA time zone name.
 
 =over 8
 
-=item * Windows Vista and 2008
+=item * Windows Vista, 2008 Server and newer Windows operating systems
 
 We look in "SYSTEM/CurrentControlSet/Control/TimeZoneInformation/" for
 a node named "/TimeZoneKeyName". If this exists, we use this key to

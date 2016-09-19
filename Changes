@@ -1,5 +1,13 @@
 {{$NEXT}}
 
+1.94    2016-09-19
+
+    - Add new time zone for Omsk Standard Time.
+    
+    - Removed known bad time zone for author testing as time is now fixed.
+    
+    - Updated documentation to reflect newer operating systems.
+
 1.93    2016-08-13
 
     - Run certain tests only during automated testing to avoid user test failures

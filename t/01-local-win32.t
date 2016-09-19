@@ -134,7 +134,7 @@ sub test_windows_zone {
     my $windows_tz_name = shift;
     my $iana_name      = shift;
     my $registry_writable = shift;
-    my %KnownBad = map { $_ => 1 } ( 'N. Central Asia Standard Time' );
+    my %KnownBad = map { $_ => 1 } ( );
 
 
     my $tz;
