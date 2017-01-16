@@ -1,5 +1,10 @@
 {{$NEXT}}
 
+1.95    2017-01-15
+
+    - Fix tests to handle daylight savings time changes for durations other than
+      one hour (Lord Howe Island in Australia shifts the clock only thirty minutes).
+
 1.94    2016-09-19
 
     - Add new time zone for Omsk Standard Time.
