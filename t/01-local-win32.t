@@ -2,7 +2,7 @@ use strict;
 use warnings;
 
 use constant {
-    DT_TZ_MIN => 1.98,
+    DT_TZ_MIN => 2.09,
     SECONDS_PER_MINUTE => 60,
     SECONDS_PER_HOUR => 60 * 60,
 };

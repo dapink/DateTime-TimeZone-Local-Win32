@@ -1,5 +1,9 @@
 {{$NEXT}}
 
+1.96    2017-03-16
+
+    - Add new time zones for Saratov Standard Time and UTC+13.
+
 1.95    2017-01-15
 
     - Fix tests to handle daylight savings time changes for durations other than
