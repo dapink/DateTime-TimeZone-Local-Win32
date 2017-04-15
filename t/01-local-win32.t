@@ -2,7 +2,7 @@ use strict;
 use warnings;
 
 use constant {
-    DT_TZ_MIN => 2.09,
+    DT_TZ_MIN => 2.10,
     SECONDS_PER_MINUTE => 60,
     SECONDS_PER_HOUR => 60 * 60,
 };
@@ -136,7 +136,7 @@ sub test_windows_zone {
     my $windows_tz_name = shift;
     my $iana_name      = shift;
     my $registry_writable = shift;
-    my %KnownBad = map { $_ => 1 } ( );
+    my %KnownBad = map { $_ => 1 } ( 'Morocco Standard Time' );  # Windows needs to reflect changes due to Ramadan
 
 
     my $tz;

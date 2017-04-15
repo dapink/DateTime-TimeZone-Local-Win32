@@ -123,6 +123,7 @@ sub EnvVars { return 'TZ' }
         'Line Islands Standard Time'      => 'Pacific/Kiritimati',
         'Lord Howe Standard Time'         => 'Australia/Lord_Howe',
         'Magadan Standard Time'           => 'Asia/Magadan',
+        'Magallanes Standard Time'        => 'America/Punta_Arenas',
         'Marquesas Standard Time'         => 'Pacific/Marquesas',
         'Mauritius Standard Time'         => 'Indian/Mauritius',
         'Mexico'                          => 'America/Mexico_City',
