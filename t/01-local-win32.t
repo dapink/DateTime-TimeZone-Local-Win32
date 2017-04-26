@@ -136,7 +136,7 @@ sub test_windows_zone {
     my $windows_tz_name = shift;
     my $iana_name      = shift;
     my $registry_writable = shift;
-    my %KnownBad = map { $_ => 1 } ( 'Morocco Standard Time' );  # Windows needs to reflect changes due to Ramadan
+    my %KnownBad = map { $_ => 1 } ( );
 
 
     my $tz;
@@ -189,20 +189,21 @@ sub test_windows_zone {
             );
             
             # typical times always Winter or Summer time depending on hemisphere if daylight savings in use
-            my $jan_dt = DateTime->new(
+            # and attempting to avoid Ramadan as Morocco suspends daylight savings during Ramadan
+            my $feb_dt = DateTime->new(
                 time_zone => $tz->name(),
-                year => $dt->year() + 1,
-                month => 1,
+                year => $dt->month() < 2? $dt->year() : $dt->year() + 1,
+                month => 2,
                 day => 1,
             );
-            my $july_dt = DateTime->new(
+            my $aug_dt = DateTime->new(
                 time_zone => $tz->name(),
-                year => $dt->month() < 7? $dt->year() : $dt->year() + 1,
-                month => 7,
+                year => $dt->month() < 8? $dt->year() : $dt->year() + 1,
+                month => 8,
                 day => 1,
             );
 
-            my $dst_offset = abs($july_dt->offset() - $jan_dt->offset());
+            my $dst_offset = abs($aug_dt->offset() - $feb_dt->offset());
             my $windows_offset
                 = $WindowsTZKey->{"${windows_tz_name}/Display"};
 
@@ -225,13 +226,13 @@ sub test_windows_zone {
             }
 
             my $dt_offset = $dt->is_dst()? $dt->offset() - $dst_offset : $dt->offset();
-            my $jan_dt_offset = $jan_dt->is_dst()? $jan_dt->offset() - $dst_offset : $jan_dt->offset();
-            my $july_dt_offset = $july_dt->is_dst()? $july_dt->offset() - $dst_offset : $july_dt->offset();
+            my $feb_dt_offset = $feb_dt->is_dst()? $feb_dt->offset() - $dst_offset : $feb_dt->offset();
+            my $aug_dt_offset = $aug_dt->is_dst()? $aug_dt->offset() - $dst_offset : $aug_dt->offset();
             
             # convert offsets from seconds before or after UTC to hours
             $dt_offset /= SECONDS_PER_HOUR;
-            $jan_dt_offset /= SECONDS_PER_HOUR;
-            $july_dt_offset /= SECONDS_PER_HOUR;
+            $feb_dt_offset /= SECONDS_PER_HOUR;
+            $aug_dt_offset /= SECONDS_PER_HOUR;
             $windows_offset /= SECONDS_PER_HOUR;
 
             if ( $KnownBad{$windows_tz_name} ) {
@@ -245,13 +246,13 @@ sub test_windows_zone {
                     );
 
                     is(
-                        $jan_dt_offset, $windows_offset,
-                        "$windows_tz_name - Windows offset matches IANA offset for time set January 1"
+                        $feb_dt_offset, $windows_offset,
+                        "$windows_tz_name - Windows offset matches IANA offset for time set February 1"
                     );
 
                     is(
-                        $july_dt_offset, $windows_offset,
-                        "$windows_tz_name - Windows offset matches IANA offset for time set July 1"
+                        $aug_dt_offset, $windows_offset,
+                        "$windows_tz_name - Windows offset matches IANA offset for time set August 1"
                     );
                     return;
                 }
@@ -271,12 +272,12 @@ sub test_windows_zone {
                 );
 
                 is(
-                    $jan_dt_offset, $windows_offset,
+                    $feb_dt_offset, $windows_offset,
                     "$windows_tz_name - Windows offset matches IANA offset for time set January 1"
                 );
 
                 is(
-                    $july_dt_offset, $windows_offset,
+                    $aug_dt_offset, $windows_offset,
                     "$windows_tz_name - Windows offset matches IANA offset for time set July 1"
                 );
             }
