@@ -278,7 +278,7 @@ sub test_windows_zone {
 
                 is(
                     $aug_dt_offset, $windows_offset,
-                    "$windows_tz_name - Windows offset matches IANA offset for time set July 1"
+                    "$windows_tz_name - Windows offset matches IANA offset for time set August 1"
                 );
             }
         }

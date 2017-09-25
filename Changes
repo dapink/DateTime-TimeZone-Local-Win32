@@ -1,5 +1,7 @@
 {{$NEXT}}
 
+    - Test results month displayed changed to match month being tested.
+
 1.98    2017-04-26
 
     - Adjust tests to calculate daylight time offsets in different months to avoid
