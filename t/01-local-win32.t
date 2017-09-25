@@ -273,7 +273,7 @@ sub test_windows_zone {
 
                 is(
                     $feb_dt_offset, $windows_offset,
-                    "$windows_tz_name - Windows offset matches IANA offset for time set January 1"
+                    "$windows_tz_name - Windows offset matches IANA offset for time set February 1"
                 );
 
                 is(
