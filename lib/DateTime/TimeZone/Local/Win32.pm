@@ -186,6 +186,7 @@ sub EnvVars { return 'TZ' }
         'South Africa Standard Time'      => 'Africa/Harare',
         'Sri Lanka'                       => 'Asia/Colombo',
         'Sri Lanka Standard Time'         => 'Asia/Colombo',
+        'Sudan Standard Time'             => 'Africa/Khartoum',
         'Syria Standard Time'             => 'Asia/Damascus',
         'Sydney Standard Time'            => 'Australia/Sydney',
         'Taipei'                          => 'Asia/Taipei',
