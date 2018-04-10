@@ -175,6 +175,7 @@ sub EnvVars { return 'TZ' }
         'Sakhalin Standard Time'          => 'Asia/Sakhalin',
         'Samoa'                           => 'Pacific/Apia',
         'Samoa Standard Time'             => 'Pacific/Apia',
+        'Sao Tome Standard Time'          => 'Africa/Sao_Tome',
         'Saratov Standard Time'           => 'Europe/Saratov',
         'Saudi Arabia'                    => 'Asia/Riyadh',
         'Saudi Arabia Standard Time'      => 'Asia/Riyadh',
