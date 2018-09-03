@@ -105,7 +105,7 @@ sub EnvVars { return 'TZ' }
         'Greenwich Standard Time'         => 'GMT',
         'GTB'                             => 'Europe/Athens',
         'GTB Standard Time'               => 'Europe/Athens',
-        'Haiti Standard Time'             => 'America/Port_au_Prince',
+        'Haiti Standard Time'             => 'America/Port-au-Prince',
         'Hawaiian'                        => 'Pacific/Honolulu',
         'Hawaiian Standard Time'          => 'Pacific/Honolulu',
         'India'                           => 'Asia/Calcutta',
