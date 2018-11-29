@@ -1,5 +1,9 @@
 {{$NEXT}}
 
+2.03    2018-11-28
+
+    - Add new time zone for Volgograd Standard Time.
+
 2.02    2018-09-03
 
     - Correct time zone for America/Port-au-Prince to use hyphens. Patch by Jonathan Luckey. RT #127017.

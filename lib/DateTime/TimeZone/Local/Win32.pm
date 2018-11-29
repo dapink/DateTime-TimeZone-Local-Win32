@@ -217,6 +217,7 @@ sub EnvVars { return 'TZ' }
         'Venezuela Standard Time'         => 'America/Caracas',
         'Vladivostok'                     => 'Asia/Vladivostok',
         'Vladivostok Standard Time'       => 'Asia/Vladivostok',
+        'Volgograd Standard Time'         => 'Europe/Volgograd',
         'W. Australia'                    => 'Australia/Perth',
         'W. Australia Standard Time'      => 'Australia/Perth',
         'W. Central Africa Standard Time' => 'Africa/Luanda',
