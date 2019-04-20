@@ -158,6 +158,7 @@ sub EnvVars { return 'TZ' }
         'Pakistan Standard Time'          => 'Asia/Karachi',
         'Paraguay Standard Time'          => 'America/Asuncion',
         'Prague Bratislava'               => 'Europe/Prague',
+        'Qyzylorda Standard Time'         => 'Asia/Qyzylorda',
         'Romance'                         => 'Europe/Paris',
         'Romance Standard Time'           => 'Europe/Paris',
         'Russia Time Zone 10'             => 'Asia/Srednekolymsk',
