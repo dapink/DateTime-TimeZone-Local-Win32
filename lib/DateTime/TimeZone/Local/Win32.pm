@@ -186,6 +186,7 @@ sub EnvVars { return 'TZ' }
         'Singapore Standard Time'         => 'Asia/Singapore',
         'South Africa'                    => 'Africa/Harare',
         'South Africa Standard Time'      => 'Africa/Harare',
+        'South Sudan Standard Time'       => 'Africa/Juba',
         'Sri Lanka'                       => 'Asia/Colombo',
         'Sri Lanka Standard Time'         => 'Asia/Colombo',
         'Sudan Standard Time'             => 'Africa/Khartoum',
@@ -234,11 +235,12 @@ sub EnvVars { return 'TZ' }
         'Western Brazilian Standard Time' => 'America/Rio_Branco',
         'Yakutsk'                         => 'Asia/Yakutsk',
         'Yakutsk Standard Time'           => 'Asia/Yakutsk',
+        'Yukon Standard Time'             => 'America/Whitehorse',
     );
-    
+
     sub _WindowsToIANA {
         my $class = shift;
-        
+
         my $win_name = shift;
 
         # On Windows 2008 Server, there is additional junk after a
