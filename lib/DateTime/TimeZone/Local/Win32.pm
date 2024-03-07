@@ -136,7 +136,7 @@ sub EnvVars { return 'TZ' }
         'Morocco Standard Time'           => 'Africa/Casablanca',
         'Mountain'                        => 'America/Denver',
         'Mountain Standard Time'          => 'America/Denver',
-        'Mountain Standard Time (Mexico)' => 'America/Chihuahua',
+        'Mountain Standard Time (Mexico)' => 'America/Mazatlan',
         'Myanmar Standard Time'           => 'Asia/Rangoon',
         'N. Central Asia Standard Time'   => 'Asia/Novosibirsk',
         'Namibia Standard Time'           => 'Africa/Windhoek',
