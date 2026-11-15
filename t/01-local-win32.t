@@ -453,11 +453,10 @@ sub test_windows_zone {
             my $obsolete = defined $WindowsTZKey->{"${windows_tz_name}/IsObsolete"}
                 && $WindowsTZKey->{"${windows_tz_name}/IsObsolete"} eq "0x00000001";
 
-            if ( $KnownBad{$windows_tz_name} || ( $TZDataDifference ne '' && !$obsolete ) ) {
+            if ( $KnownBad{$windows_tz_name} ) {
             TODO: {
-                    local $TODO = $KnownBad{$windows_tz_name}
-                        ? "Microsoft has some out-of-date time zones relative to IANA"
-                        : $TZDataDifference;
+                    local $TODO
+                        = "Microsoft has some out-of-date time zones relative to IANA";
 
                     is(
                         $windows_offset, $dt_offset,
@@ -483,21 +482,26 @@ sub test_windows_zone {
                 );
             }
             else {
-                is(
-                    $windows_offset, $dt_offset,
-                    "$windows_tz_name - Windows offset matches IANA offset for current time"
-                );
-
-                is(
-                    $windows_feb_offset, $feb_dt_offset,
-                    "$windows_tz_name - Windows offset matches IANA offset for time set February 1"
-                );
-
-                is(
-                    $windows_aug_offset, $aug_dt_offset,
-                    "$windows_tz_name - Windows offset matches IANA offset for time set August 1"
-                );
+                is_windows_offset( $windows_tz_name, 'current time', $windows_offset, $dt_offset );
+                is_windows_offset( $windows_tz_name, 'time set February 1', $windows_feb_offset, $feb_dt_offset );
+                is_windows_offset( $windows_tz_name, 'time set August 1', $windows_aug_offset, $aug_dt_offset );
             }
         }
     }
+}
+
+# Compares one Windows offset with IANA's. A mismatch is reported as TODO,
+# not a failure, only when Windows and DateTime::TimeZone are using different
+# releases of the time zone data; matching offsets are always plain passes.
+sub is_windows_offset {
+    my ( $windows_tz_name, $when, $windows_offset, $iana_offset ) = @_;
+
+    local $TODO;
+    $TODO = $TZDataDifference
+        if $TZDataDifference ne '' && $windows_offset != $iana_offset;
+
+    is(
+        $windows_offset, $iana_offset,
+        "$windows_tz_name - Windows offset matches IANA offset for $when"
+    );
 }
