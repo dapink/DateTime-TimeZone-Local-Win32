@@ -32,9 +32,16 @@ jobs:
       - name: Install dependencies
         run: cpanm --notest DateTime DateTime::TimeZone Try::Tiny Win32::TieRegistry
 
+      # Windows build and time zone data level next to the IANA data level,
+      # so an offset failure shows whether this machine's Windows is behind.
       - name: Show versions
-        # Single quotes so PowerShell leaves the $ variables for Perl.
-        run: perl -MDateTime -MDateTime::TimeZone -e 'print qq{Perl $^V, DateTime $DateTime::VERSION, DateTime::TimeZone $DateTime::TimeZone::VERSION}'
+        run: |
+          $cv = Get-ItemProperty 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion'
+          "Windows build: $($cv.CurrentBuild).$($cv.UBR)"
+          $tzv = (Get-ItemProperty 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Time Zones').TzVersion
+          'Windows TzVersion: 0x{0:X8} (year {1}, release {2})' -f $tzv, ($tzv -shr 16), ($tzv -band 0xFFFF)
+          # Single quotes so PowerShell leaves the $ variables for Perl.
+          perl -MDateTime -MDateTime::TimeZone -e 'printf qq{Perl %vd, DateTime %s, DateTime::TimeZone %s (IANA %s)\n}, $^V, $DateTime::VERSION, $DateTime::TimeZone::VERSION, DateTime::TimeZone->new(name => q{America/Havana})->olson_version'
 
       # The runner is an administrator, so the registry-based checks run too.
       - name: Run full Windows time zone test
