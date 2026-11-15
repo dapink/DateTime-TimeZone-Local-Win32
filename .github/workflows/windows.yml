@@ -1,0 +1,44 @@
+# Runs the full Windows time zone test on a clean GitHub-hosted Windows
+# machine. Not part of the CPAN distribution: Dist::Zilla's [GatherDir]
+# skips dot-directories such as .github.
+name: Windows
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+  workflow_dispatch:    # "Run workflow" button on the Actions tab
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: windows-latest
+    timeout-minutes: 30
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: shogo82148/actions-setup-perl@v1
+        with:
+          perl-version: '5.42'
+          distribution: strawberry
+
+      # Latest DateTime::TimeZone from CPAN, so the test compares Windows
+      # against the newest IANA data.
+      - name: Install dependencies
+        run: cpanm --notest DateTime DateTime::TimeZone Try::Tiny Win32::TieRegistry
+
+      - name: Show versions
+        # Single quotes so PowerShell leaves the $ variables for Perl.
+        run: perl -MDateTime -MDateTime::TimeZone -e 'print qq{Perl $^V, DateTime $DateTime::VERSION, DateTime::TimeZone $DateTime::TimeZone::VERSION}'
+
+      # The runner is an administrator, so the registry-based checks run too.
+      - name: Run full Windows time zone test
+        env:
+          AUTOMATED_TESTING: 1
+          AUTHOR_TESTING: 1
+        run: prove -lv t
