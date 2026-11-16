@@ -323,10 +323,6 @@ __END__
 
 =pod
 
-=head1 NAME
-
-DateTime::TimeZone::Local::Win32 - Determine the local system's time zone on Windows
-
 =head1 SYNOPSIS
 
   my $tz = DateTime::TimeZone->new( name => 'local' );
