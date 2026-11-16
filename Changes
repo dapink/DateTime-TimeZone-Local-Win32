@@ -1,5 +1,9 @@
 {{$NEXT}}
 
+    - Add SECURITY.md and CONTRIBUTING.md.
+
+    - Remove duplicate NAME section from the documentation.
+
 2.08    2026-11-15
 
     - Update author email address and report bugs on GitHub issues instead of RT.
