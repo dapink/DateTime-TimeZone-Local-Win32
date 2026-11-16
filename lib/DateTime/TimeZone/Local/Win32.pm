@@ -17,6 +17,11 @@ sub EnvVars { return 'TZ' }
 {
     # This list comes (mostly) in the zipball for the Chronos project
     # - a Smalltalk datetime library. Thanks, Chronos!
+    #
+    # Never remove an entry from this table. Older versions of Windows
+    # report older zone names (for example 'Pacific' or 'Tasmania',
+    # without 'Standard Time'), and a machine may still be set to a zone
+    # Microsoft has since marked obsolete. Only add or correct entries.
     my %WinToIANA = (
         'Afghanistan'                     => 'Asia/Kabul',
         'Afghanistan Standard Time'       => 'Asia/Kabul',
@@ -295,7 +300,7 @@ sub _FindWindowsTZName {
             ? $LMachine->{
             'SOFTWARE/Microsoft/Windows NT/CurrentVersion/Time Zones/'}
 
-            # Windows 95, Windows 98, Windows Millenium Edition
+            # Windows 95, Windows 98, Windows Millennium Edition
             : $LMachine->{
             'SOFTWARE/Microsoft/Windows/CurrentVersion/Time Zones/'};
 
@@ -368,7 +373,7 @@ to the end to the value of
 gives us the I<English> name of the Windows time zone, which we use to
 look up the IANA time zone name.
 
-=item * Windows 95, Windows 98, Windows Millenium Edition
+=item * Windows 95, Windows 98, Windows Millennium Edition
 
 The algorithm is the same as for NT, but we loop through the sub keys
 of "SOFTWARE/Microsoft/Windows/CurrentVersion/Time Zones/"
